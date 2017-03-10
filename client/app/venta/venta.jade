@@ -1,0 +1,88 @@
+div(layout='row' layout-align='center center' layout-xs='column' ng-show='vm.valid')
+  div(flex='90' flex-gt-sm='45' align='center' )  
+    h1.main LA TIENDA 
+br
+div(layout='row'  layout-align="center center" layout-xs="column"  )
+  div(flex='95' flex-gt-sm="30" ng-hide='vm.valid')
+    md-card 
+      md-card-title 
+        md-card-title-text
+          span.md-headline Dejanos saber quién eres.
+          span.md-subhead  Escribe el token que se te asignó para poder continuar.
+      md-card-content
+        form( name='frmToken' ng-submit='vm.validToken()')
+          md-input-container.md-block
+            label Token de seguridad
+            input(type='password' name='token', ng-model='vm.token', required='')
+            div(ng-messages='frmToken.token.$error')
+              div(ng-message='required') Te falta el token...
+          md-button.md-primary(type='submit') Continuar
+  div(flex='95' flex-gt-sm="25" ng-show='vm.valid')
+    md-card
+      md-card-title
+        md-card-title-text
+          span.md-headline Deudores
+          span.md-subhead Selecciona la persona para ver que productos debe...
+          md-button.md-primary(ng-click='vm.showDialogAddPersona($event)' aria-label='Abrete sesamo 2') Agregar nueva persona
+      md-card-content
+        md-list(flex='' )
+          md-input-container.md-block
+            label ¿Quién?
+            md-select(ng-model='vm.idPersona',  ng-change='vm.selectPersona()', required)
+              md-option(ng-repeat='persona in vm.personas', value='{{persona.id_persona}}')
+                span.title {{persona.nombre_persona}}
+          md-subheader.md-no-sticky {{vm.persona.totalCantidad}} productos total: $ {{vm.persona.totalValor}}
+          md-content.listD
+            md-list-item.md-3-line(ng-repeat='producto in vm.listaDebe')
+              .md-list-item-text(layout='column')
+                h3 {{producto.cant}} {{producto.nombre_producto}}
+                h4  {{producto.precio | currency}} c/u | {{producto.sub_total | currency}} total
+                p {{producto.fecha | date:"EEEE, MMMM d, y" }}
+                md-checkbox.md-secondary.md-primary(ng-model='vm.chDeuda[producto.id_registro]')
+          md-button.md-primary(ng-click='vm.flush()') Liberar deudas.
+  md-card(flex='95' flex-gt-sm="35" ng-show='vm.valid')
+    md-card-title
+      md-card-title-text
+        span.md-headline Ventas
+        span.md-subhead Selecciona primero un rango de fechas para poder ver las ventas realizadas.
+    md-card-content(layout='row' layout-xs="column")
+      md-datepicker(ng-model="vm.fechaDesde" md-placeholder='Desde' flex)
+      md-datepicker(ng-model="vm.fechaHasta" md-placeholder='Hasta' flex)
+    md-card-content
+      md-table-container
+        table(md-table md-progress='vm.ventas')
+          thead(md-head)
+            tr(md-row)
+              th(md-column) Producto
+              th(md-column) Cantidad vendida
+              th(md-column) Precio c/u
+              th(md-column) Total
+          tbody(md-body)
+            tr(md-row ng-repeat='rowVenta in vm.ventas | limitTo: vm.queryv.limit : (vm.queryv.page -1) * vm.queryv.limit')
+              td(md-cell) {{rowVenta.nombre_producto}}
+              td(md-cell) {{rowVenta.cantidad_vendida}}
+              td(md-cell) {{rowVenta.precio | currency}}
+              td(md-cell) {{rowVenta.total | currency }}
+      md-table-pagination(md-limit='vm.queryv.limit', md-page='vm.queryv.page', md-total="{{vm.lengVentas}}")
+  md-card(flex='95' flex-gt-sm="30" ng-show='vm.valid')
+    md-card-title
+      md-card-title-text
+        span.md-headline Inventario parcial 
+        span.md-subhead Podrás visualizar que cantidad hay actualmente de cada producto.
+        md-button.md-primary(ng-click='vm.showDialogAddProduct($event)' aria-label='Abrete sesamo') Agregar nuevo producto 
+    md-card-content
+      md-table-container
+        table(md-table md-progress='vm.inventario')
+          thead(md-head)
+            tr(md-row)
+              th(md-column) Producto
+              th(md-column) Cantidad
+              th(md-column)
+          tbody(md-body)
+            tr(md-row ng-repeat='rowInventario in vm.inventario | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit')
+              td(md-cell) {{rowInventario.nombre_producto}}
+              td(md-cell) {{rowInventario.cantidad_producto}}
+              td(md-cell) 
+                md-button.md-primary.md-icon-button(aria-label='{{rowInventario.id_producto}}' ng-click='vm.addCant(rowInventario.id_producto,$event)')
+                  i.material-icons.md-primary add_circle_outline 
+        md-table-pagination(md-limit='vm.query.limit', md-page='vm.query.page', md-total="{{vm.lengInventario}}")

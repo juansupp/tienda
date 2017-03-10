@@ -1,0 +1,63 @@
+div(layout='row' layout-align='center center' layout-xs='column')
+  div(flex='90' flex-gt-sm='45' align='center' ) 
+    h1.main LA TIENDA 
+br
+div(layout='row'  layout-align="center center" layout-xs="column")
+  div(flex='95' flex-gt-sm="30")
+    md-card
+      md-card-title
+        md-card-title-text
+          span.md-headline He retirado un producto
+          span.md-subhead Cada vez que se retire un producto de la tienda se deberás seleccionar 
+            | su nombre, el producto y que cantidad retirada, de esa forma se 
+            | podrá tener un control de la tienda más ordenado. 
+      md-card-content
+        form(name='frm', ng-submit='vm.listo(frm,$event)' )
+          //md-datepicker(ng-model='fecha' name='fecha' md-placeholder='¿Cuando?')
+          //PERSONA 
+          md-input-container.md-block
+            label ¿Quién?
+            md-select(name='persona', ng-model='vm.idPersona',  ng-change='vm.selectPersona()', required)
+              md-option(ng-repeat='persona in vm.personas', value='{{persona.id_persona}}')
+                span.title {{persona.nombre_persona}}
+            div(ng-messages='frm.persona.$error', ng-if='frm.persona.$touched')
+              div(ng-message='required') ¬¬
+          //PRODUCTO 
+          div(layout='row' layout-xs="column")
+            div(flex='100' flex-gt-sm="70")
+              md-input-container.md-block
+                label ¿Qué?
+                md-select(name='producto', ng-model='vm.idProducto', required )
+                  md-option.option(ng-repeat='producto in vm.productos', value='{{producto.id_producto}}')
+                    b 
+                      span.title {{producto.nombre_producto}} 
+                    br
+                    span.left Quedan : {{producto.cantidad_producto}} | {{producto.precio | currency}}
+                div(ng-messages='frm.producto.$error', ng-if='frm.producto.$touched')
+                  div(ng-message='required') ( ಠ_ಠ )
+            //Cantidad
+            div(flex='100' flex-gt-sm="30")
+              md-input-container.md-block
+                label ¿Cuantos?
+                input(type='number' name='cantidad', ng-model='vm.cantidad', required='')
+                div(ng-messages='frm.cantidad.$error')
+                  div(ng-message='required') ಥ_ಥ
+          div(layout='row'  layout-align="space-between center")
+            md-input-container.md-block(flex)
+              md-button.md-icon-button.md-primary( type='submit' aria-label='Settings')
+                md-tooltip(md-direction="right") ¡Listo!
+                i.material-icons thumb_up
+  div(flex='95' flex-gt-sm="30")
+    md-card
+      md-card-title
+        md-card-title-text
+          span.md-headline Debes...
+      md-card-content
+        md-list(flex='' )
+          md-subheader.md-no-sticky {{vm.persona.totalCantidad}} productos total: $ {{vm.persona.totalValor}}
+          md-content.listH
+            md-list-item.md-3-line(ng-repeat='producto in vm.listaDebe')
+              .md-list-item-text(layout='column')
+                h3 {{producto.cant}} {{producto.nombre_producto}}
+                h4 ${{producto.precio}} c/u
+                p ${{producto.sub_total}} total

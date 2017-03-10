@@ -1,0 +1,27 @@
+md-dialog(aria-label='Panel añadir Producto' ) 
+  form(name='frmDialog' ng-submit='vmd.aceptar(frmDialog)')
+    md-toolbar
+      .md-toolbar-tools
+        h2 Agregar nuevo producto 
+        span(flex='')
+        md-button.md-icon-button.md-white(ng-click='vmd.cancelar()')
+          i.material-icons close
+    md-dialog-content
+      .md-dialog-content
+        md-input-container.md-block
+          label Producto        
+          input(required, name='nombreProducto', ng-model='vmd.nombreProducto' aria-label='nombreProducto')
+          div(ng-messages='frmDialog.nombreProducto.$error')
+            div(ng-message='required') Campo requerido.
+        md-input-container.md-block
+          label Precio
+          input(required, name='precioProducto', ng-model = 'vmd.precioProducto', type='number' aria-label='precioProducto')
+          div(ng-messages= 'frmDialog.precioProducto.$error')
+            div(ng-message='required') Campo requerido.
+        md-input-container.md-block
+          label Cantidad
+          input(required, name='cantidadProducto', ng-model = 'vmd.cantidadProducto' type='number' aria-label='cantidadProducto')
+          div(ng-messages= 'frmDialog.cantidadProducto.$error')
+            div(ng-message='required') Campo requerido.
+    md-dialog-actions(layout='row')
+      md-button.md-primary(type='submit') Aceptar
